@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
 import org.testcontainers.containers.DockerComposeContainer
 import org.testcontainers.containers.wait.strategy.Wait.forListeningPort
 import org.testcontainers.junit.jupiter.Container
@@ -15,6 +16,7 @@ private const val SFTP_PORT = 22
 
 class KDockerComposeContainer(composeFiles: File) : DockerComposeContainer<KDockerComposeContainer>(composeFiles)
 
+@ActiveProfiles("test")
 @Testcontainers
 @SpringBootTest
 class SimpleSftpTest {
