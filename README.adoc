@@ -1,0 +1,66 @@
+= Spring Boot SFTP Workbench
+
+A workbench project to experiment with Spring Boot, Spring Batch and SFTP.
+
+== SFTP Server configuration
+
+=== Running the SFTP server using docker-compose
+
+Manually by using `docker-compose`
+----
+docker-compose -d -f sftp-server/docker-compose.yml up
+----
+
+Using Gradle:
+----
+./gradlew composeUp
+----
+
+== Users
+
+Users can be configured in the `sftp-server/conf/users.con`.
+
+=== Generating server keys
+
+The following keys are required by the setup:
+
+Generate host keys using the following commands (don't enter a passphrase):
+----
+ssh-keygen -t ed25519 -C workbench_ed25519 -f ssh_host_ed25519_key < /dev/null
+ssh-keygen -t rsa -b 4096 -C workbench_host -f ssh_host_rsa_key < /dev/null
+----
+The private keys are required by the sftp server in the `sftp-server/keys` folder.
+
+The files need to be mounted. See `docker-compose.yml` for details.
+
+Add the content of `ssh_host_rsa_key.pub` to `src/main/resources/keys/known_hosts`.
+
+=== Generating user keys
+
+In order for `jsch` to be able to read the private key of the user it has to be stored in the PEM file format using the following command:
+
+.Set the passphrase to _itsSecret_
+----
+ssh-keygen -t rsa -m PEM -b 2048 -C toni_secret -f id_toni_secret_rsa -N itsSecret
+----
+
+.Without passphrase
+----
+ssh-keygen -t rsa -m PEM -b 2048 -C toni -f id_toni_rsa
+----
+
+The files need to be mounted. See `docker-compose.yml` for details.
+
+=== Connecting to the SFTP server on the command line:
+
+----
+sftp -P 2222 -o StrictHostKeyChecking=no -i sftp-server/keys/user/id_toni_rsa toni@localhost
+----
+
+== Dependencies
+
+* https://github.com/atmoz/sftp[GitHub: atmoz/sftp]
+
+== Todos
+
+* Copy keys to (build) resources on execution in IDE

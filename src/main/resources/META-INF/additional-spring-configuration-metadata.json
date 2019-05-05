@@ -1,0 +1,39 @@
+{
+  "properties": [
+    {
+      "name": "sftp.keys-folder",
+      "type": "java.lang.String",
+      "description": "Base folder of all keys and known_hosts file."
+    },
+    {
+      "name": "sftp.strict-host-key-checking",
+      "type": "java.lang.String",
+      "description": "Enable strict host key checking (values 'yes' or 'no')."
+    },
+    {
+      "name": "sftp.user-private-key-passphrase",
+      "type": "java.lang.String",
+      "description": "Passphrase of the private key."
+    },
+    {
+      "name": "sftp.user-private-key",
+      "type": "java.lang.String",
+      "description": "Path of private key file relative to sftp.keys.folder."
+    },
+    {
+      "name": "sftp.username",
+      "type": "java.lang.String",
+      "description": "Username for SFTP connection."
+    },
+    {
+      "name": "sftp.remote-host",
+      "type": "java.lang.String",
+      "description": "Host of the SFTP server."
+    },
+    {
+      "name": "sftp.remote-port",
+      "type": "java.lang.String",
+      "description": "Port of the SFTP server."
+    }
+  ]
+}

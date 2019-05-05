@@ -1,0 +1,11 @@
+sftp:
+  image: atmoz/sftp
+  volumes:
+    - ./conf/users.conf:/etc/sftp/users.conf:ro
+    - ./keys/server/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key
+    - ./keys/server/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key
+    - ./keys/user/id_toni_rsa.pub:/home/toni/.ssh/keys/id_toni_rsa.pub:ro
+    - ./keys/user/id_toni_secret_rsa.pub:/home/toni/.ssh/keys/id_toni_secret_rsa.pub:ro
+    - ./share:/home/toni/share
+  ports:
+    - "2222:22"
