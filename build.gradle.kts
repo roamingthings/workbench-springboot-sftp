@@ -40,6 +40,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-batch")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("org.springframework.integration:spring-integration-jdbc")
 	implementation("org.springframework.integration:spring-integration-sftp")
 
 	runtimeOnly("com.h2database:h2")
@@ -54,6 +55,7 @@ dependencies {
 	testImplementation("org.assertj:assertj-core")
 	testImplementation("org.mockito:mockito-core")
 	testImplementation("org.mockito:mockito-junit-jupiter")
+	testImplementation("org.apache.sshd:sshd-sftp:2.2.0")
 
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")

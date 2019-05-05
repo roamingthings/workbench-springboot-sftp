@@ -4,14 +4,13 @@ import com.jcraft.jsch.ChannelSftp
 import com.jcraft.jsch.JSch
 import com.jcraft.jsch.JSchException
 import com.jcraft.jsch.Session
-import de.roamingthings.workbench.sftp.configuration.SftpConfiguration
+import de.roamingthings.workbench.sftp.configuration.SftpProperties
 import org.springframework.stereotype.Service
-import org.springframework.util.ResourceUtils
 import java.io.FileNotFoundException
 import java.util.*
 
 @Service
-class SimpleSftpService(val sftpConfiguration: SftpConfiguration) {
+class SimpleSftpService(val sftpProperties: SftpProperties) {
 
     fun retrieveRemoteFolderList(): Vector<*> {
 
@@ -48,12 +47,12 @@ class SimpleSftpService(val sftpConfiguration: SftpConfiguration) {
 
         jsch.addIdentity(
                 localPrivateKeyAbsolutePath(),
-                sftpConfiguration.userPrivateKeyPassphrase)
+                sftpProperties.userPrivateKeyPassphrase)
 
         val session = jsch.getSession(
-                sftpConfiguration.username,
-                sftpConfiguration.remoteHost,
-                sftpConfiguration.remotePort
+                sftpProperties.user,
+                sftpProperties.host,
+                sftpProperties.port
         )
 
         session.setConfig(sessionConfiguration())
@@ -62,17 +61,17 @@ class SimpleSftpService(val sftpConfiguration: SftpConfiguration) {
 
     @Throws(FileNotFoundException::class)
     private fun knowHostsAbsolutePath(): String {
-        return ResourceUtils.getFile(sftpConfiguration.keysFolder + "/known_hosts").absolutePath
+        return sftpProperties.knownHosts?.file?.absolutePath ?: throw FileNotFoundException()
     }
 
     @Throws(FileNotFoundException::class)
     private fun localPrivateKeyAbsolutePath(): String {
-        return ResourceUtils.getFile(sftpConfiguration.keysFolder + sftpConfiguration.userPrivateKey).absolutePath
+        return sftpProperties.userPrivateKey?.file?.absolutePath ?: throw FileNotFoundException()
     }
 
     private fun sessionConfiguration(): Properties {
         val prop = Properties()
-        prop["StrictHostKeyChecking"] = sftpConfiguration.strictHostKeyChecking
+        prop["StrictHostKeyChecking"] = sftpProperties.strictHostKeyChecking
         return prop
     }
 }

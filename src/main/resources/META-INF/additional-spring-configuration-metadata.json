@@ -21,19 +21,24 @@
       "description": "Path of private key file relative to sftp.keys.folder."
     },
     {
-      "name": "sftp.username",
+      "name": "sftp.user",
       "type": "java.lang.String",
       "description": "Username for SFTP connection."
     },
     {
-      "name": "sftp.remote-host",
+      "name": "sftp.host",
       "type": "java.lang.String",
       "description": "Host of the SFTP server."
     },
     {
-      "name": "sftp.remote-port",
+      "name": "sftp.port",
       "type": "java.lang.String",
       "description": "Port of the SFTP server."
+    },
+    {
+      "name": "sftp.remoteDirectory",
+      "type": "java.lang.String",
+      "description": "Remote directory to watch."
     }
   ]
 }

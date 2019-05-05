@@ -1,6 +1,6 @@
 package de.roamingthings.workbench.sftp
 
-import de.roamingthings.workbench.sftp.configuration.SftpConfiguration
+import de.roamingthings.workbench.sftp.configuration.SftpProperties
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,7 +22,7 @@ class KDockerComposeContainer(composeFiles: File) : DockerComposeContainer<KDock
 class SimpleSftpTest {
 
     @Autowired
-    lateinit var sftpConfiguration: SftpConfiguration
+    lateinit var sftpProperties: SftpProperties
 
     @Autowired
     lateinit var simpleSftpService: SimpleSftpService
@@ -36,8 +36,8 @@ class SimpleSftpTest {
 
     @Test
     fun `should list file on server`() {
-        sftpConfiguration.remoteHost = sftp.getServiceHost("sftp", SFTP_PORT)
-        sftpConfiguration.remotePort = sftp.getServicePort("sftp", SFTP_PORT)
+        sftpProperties.host = sftp.getServiceHost("sftp", SFTP_PORT)
+        sftpProperties.port = sftp.getServicePort("sftp", SFTP_PORT)
 
         val folderContentList = simpleSftpService.retrieveRemoteFolderList()
 
