@@ -19,6 +19,8 @@ class SftpProperties {
 
     var userPrivateKey: Resource? = null
 
+    var userPublicKey: Resource? = null
+
     lateinit var userPrivateKeyPassphrase: String
 
     var password: String? = null
