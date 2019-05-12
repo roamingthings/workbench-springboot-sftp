@@ -2,8 +2,8 @@ package de.roamingthings.workbench.sftp
 
 import de.roamingthings.workbench.sftp.configuration.SftpProperties
 import org.apache.sshd.common.file.virtualfs.VirtualFileSystemFactory
+import org.apache.sshd.common.keyprovider.ClassLoadableResourceKeyPairProvider
 import org.apache.sshd.server.SshServer
-import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider
 import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.context.SmartLifecycle
@@ -23,40 +23,36 @@ import java.security.KeyFactory
 import java.security.PublicKey
 import java.security.spec.RSAPublicKeySpec
 
+const val PORT_AUTO = 0
 
 @Service
 @Profile("embeddedSftp")
-class EmbeddedSftpServer(private val sftpProperties: SftpProperties) : InitializingBean, SmartLifecycle {
+class EmbeddedSftpServer(
+        private val sftpProperties: SftpProperties,
+        private val sftpSessionFactory: DefaultSftpSessionFactory) : InitializingBean, SmartLifecycle {
 
     private val server = SshServer.setUpDefaultServer()
 
     @Volatile
-    private var port: Int = 2222
+    private var port: Int = PORT_AUTO
 
     @Volatile
     private var running: Boolean = false
 
 
-    private var defaultSftpSessionFactory: DefaultSftpSessionFactory? = null
-
     fun setPort(port: Int) {
         this.port = port
-    }
-
-    fun setDefaultSftpSessionFactory(defaultSftpSessionFactory: DefaultSftpSessionFactory) {
-        this.defaultSftpSessionFactory = defaultSftpSessionFactory
     }
 
     override fun afterPropertiesSet() {
         val allowedKey = decodePublicKey()
         server.setPublickeyAuthenticator { username, key, session -> key == allowedKey }
         server.port = this.port
-        server.keyPairProvider = SimpleGeneratorHostKeyProvider(File("hostkey.ser").toPath())
+        server.keyPairProvider = ClassLoadableResourceKeyPairProvider("META-INF/keys/ssh_host_rsa_key")
         server.subsystemFactories = listOf(SftpSubsystemFactory())
-//        val pathname = System.getProperty("java.io.tmpdir") + File.separator + "sftptest" + File.separator
-//        File(pathname).mkdirs()
-//        server.fileSystemFactory = VirtualFileSystemFactory(Paths.get(pathname))
-        server.fileSystemFactory = VirtualFileSystemFactory(Paths.get("sftp-server/share"))
+        val pathname = System.getProperty("java.io.tmpdir") + File.separator + "sftptest" + File.separator
+        File(pathname).mkdirs()
+        server.fileSystemFactory = VirtualFileSystemFactory(Paths.get(pathname))
     }
 
     private fun decodePublicKey(): PublicKey {
@@ -91,7 +87,7 @@ class EmbeddedSftpServer(private val sftpProperties: SftpProperties) : Initializ
     }
 
     override fun isAutoStartup(): Boolean {
-        return 0 == this.port
+        return this.port == PORT_AUTO
     }
 
     override fun getPhase(): Int {
@@ -101,7 +97,8 @@ class EmbeddedSftpServer(private val sftpProperties: SftpProperties) : Initializ
     override fun start() {
         try {
             this.server.start()
-            this.defaultSftpSessionFactory!!.setPort(this.server.port)
+            val serverPort = this.server.port
+            this.sftpSessionFactory.setPort(serverPort)
             this.running = true
         } catch (e: IOException) {
             throw IllegalStateException(e)

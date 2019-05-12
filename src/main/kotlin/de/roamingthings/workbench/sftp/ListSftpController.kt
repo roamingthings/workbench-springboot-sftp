@@ -10,7 +10,7 @@ class ListSftpController(private val simpleSftpService: SimpleSftpService) {
 
     @GetMapping("/ls")
     fun listSftp(): ResponseEntity<List<String>> {
-        val list = simpleSftpService.retrieveRemoteFolderList()
-        return ok(list.map { it.toString() })
+        val list = simpleSftpService.retrieveRemoteFolderList("/foos")
+        return ok(list.map { it.filename.toString() })
     }
 }

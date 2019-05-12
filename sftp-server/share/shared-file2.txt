@@ -1,0 +1,1 @@
+This is an example for a file located in /home/toni/share on the sftp server.
