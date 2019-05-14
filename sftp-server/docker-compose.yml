@@ -9,3 +9,11 @@ sftp:
     - ./share:/home/toni/share
   ports:
     - "2222:22"
+
+db:
+  image: postgres
+  restart: always
+  environment:
+    POSTGRES_PASSWORD: example
+  ports:
+    - "15432:5432"

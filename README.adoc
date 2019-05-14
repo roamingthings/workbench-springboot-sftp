@@ -57,6 +57,19 @@ The files need to be mounted. See `docker-compose.yml` for details.
 sftp -P 2222 -o StrictHostKeyChecking=no -i sftp-server/keys/user/id_toni_rsa toni@localhost
 ----
 
+=== Manually create test files
+
+----
+for i in {1..100}
+do
+  echo "Hello $i" > foo$i.txt
+done
+----
+
+=== Setup the database schema
+
+`spring-integration-jdbc-5.1.4.RELEASE.jar!/org/springframework/integration/jdbc/schema-postgresql.sql`
+
 == Dependencies
 
 * https://github.com/atmoz/sftp[GitHub: atmoz/sftp]
